@@ -26,7 +26,6 @@ function day7part1(input) {
             }
         }
     }
-    console.log(`found ${valid_counter} valid eqns out of ${lines.length}`)
     return valid_sum;
 }
 
@@ -49,7 +48,6 @@ function day7part2(input) {
             }
         }
     }
-    console.log(`found ${valid_counter} valid eqns out of ${lines.length}`)
     return valid_sum;
 }
 
