@@ -5,6 +5,7 @@ import { solveday3 } from './solutions/day3.js';
 import { solveday4 } from './solutions/day4.js';
 import { solveday5 } from './solutions/day5.js';
 import { solveday6 } from './solutions/day6.js';
+import { solveday7 } from './solutions/day7.js';
 
 export async function SolveDay(day, input)
 {
@@ -23,7 +24,7 @@ export async function SolveDay(day, input)
         case 6:
             return solveday6(input);
         case 7:
-            break;
+            return solveday7(input);
         case 8:
             break;
         case 9:
