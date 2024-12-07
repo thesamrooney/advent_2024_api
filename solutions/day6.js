@@ -46,7 +46,9 @@ function day6part2(input) {
     let traveled_positions = []
     while (true) {
         let next_position = Array.from(position);
-        if (original_map[position[0][position[1]]] != "X") {
+        let character = original_map[position[0]][position[1]];
+        if (character != "X" && character != "^") {
+            console.log(`pushing position with character ${original_map[position[0]][position[1]]} - ${character == "^"}`)
             traveled_positions.push(position);
         }
         original_map[position[0]] = replaceCharInString(original_map[position[0]], position[1], "X");
@@ -60,11 +62,71 @@ function day6part2(input) {
             direction = get_next_direction(direction);
         }
     }
-
-    return undefined;
+    // so now we have the traveled map with a lot of Xs, as well as the original map
+    // we can put a # on the original map in any one of the X positions
+    // we do that then check if the map has a loop for all X positions
+    let count_loops = 0;
+    console.log(traveled_positions);
+    let counter = 0;
+    for (let position of traveled_positions) {
+        counter++;
+        let new_map = [];
+        for (let row of input_lines){
+            new_map.push(Array.from(row).join(""))
+        }
+        if (new_map[position[0]][position[1]] == "^") {
+            console.log("what's with this? keep trying to overwrite the starting point wtf");
+        } else {
+            new_map[position[0]] = replaceCharInString(input_lines[position[0]], position[1], "#");
+            if (detect_loop_in_map(new_map)) {
+                count_loops++;
+            }
+        }
+        if (counter % 100 == 0) {
+            console.log(`seen ${counter} maps, found ${count_loops} loops.`)
+        }
+    }
+    return count_loops;
 }
 
-function detect_loop_in_map = 
+function detect_loop_in_map(map_lines) {
+    let position = find_starting_point(map_lines);
+    if (!position) {
+        console.log("invalid position - what?");
+        for (let row of map_lines) {
+            console.log(row);
+        }
+        return false;
+    }
+    let rows = map_lines.length;
+    let cols = map_lines[0].length;
+    let direction = get_next_direction(undefined);
+    while (true) {
+        let posChar = map_lines[position[0]][position[1]];
+        if (posChar == ".") {
+            map_lines[position[0]] = replaceCharInString(map_lines[position[0]], position[1], "1");
+        } else if (posChar == "1") {
+            map_lines[position[0]] = replaceCharInString(map_lines[position[0]], position[1], "2");
+        } else if (posChar == "2") {
+            map_lines[position[0]] = replaceCharInString(map_lines[position[0]], position[1], "3");
+        } else if (posChar == "3") {
+            map_lines[position[0]] = replaceCharInString(map_lines[position[0]], position[1], "4");
+        } else if (posChar == "4") {
+            return true;
+        }
+        let next_position = Array.from(position);
+        next_position[0] += direction[0];
+        next_position[1] += direction[1];
+        if (next_position[0] >= rows || next_position[0] < 0 || next_position[1] >= cols || next_position[1] < 0) {
+            break;
+        } else if (map_lines[next_position[0]][next_position[1]] != "#") {
+            position = next_position;
+        } else {
+            direction = get_next_direction(direction);
+        }
+    }
+    return false;
+}
 
 function find_starting_point(input_lines) {
     for (let row in input_lines) {
